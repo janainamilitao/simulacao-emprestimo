@@ -409,6 +409,7 @@ A base do sucesso depende da compreensão completa do comportamento atual:
 - Identificação de consultas mais custosas;
 - Análise de acoplamento entre módulos do legado.
 
+> [!IMPORTANT] 
 >**Risco mitigado:** divergência funcional ou perda de regras ocultas.
 
 ### 3.2 Uso Adequado da Camada ACL (Anti-Corruption Layer)
@@ -439,6 +440,7 @@ Etapas:
 - Funções adjacentes são migradas gradualmente;
 - Procedimentos antigos vão sendo “estrangulados” e desligados.
 
+> [!IMPORTANT] 
 > **Risco mitigado:** big bang rewrite → a principal causa de falhas em modernização.
 
 ### 3.5 Observabilidade Completa
@@ -449,6 +451,7 @@ Desde o primeiro dia, é indispensável:
 - Dashboards para ACL, Redis e Motor de Cálculo;
 - Alarmes para falhas e quedas de performance.
 
+> [!IMPORTANT] 
 > **Risco mitigado:** problemas invisíveis, divergências silenciosas e indisponibilidade.
 
 ### 3.6 Governança de Dados e ETL Confiável
@@ -457,6 +460,7 @@ A modernização envolve reavaliar:
 - Regras de sincronização entre Sybase e OLAP/read-replica;
 - Consistência dos dados de operação x dados analíticos.
 
+> [!IMPORTANT] 
 >**Risco mitigado:** dados duplicados ou inconsistências que geram erros financeiros.
 
 ### 3.7 Testes Automatizados e Testes de Contrato
@@ -467,6 +471,7 @@ Devem ser implementados os seguintes tipos de testes:
 - Testes de contrato da ACL;
 - Testes comparando legado x novo motor em paralelo (modo shadow).
 
+> [!IMPORTANT]
 >**Risco mitigado:** regressões e comportamentos inesperados.
 
 ### 3.8 Feature Toggles e Rollout Gradual
@@ -476,6 +481,7 @@ Permite:
 - rollback imediato sem impacto na operação;
 - migração incremental por produto, canal ou segmento.
 
+> [!IMPORTANT] 
 > **Risco mitigado:** instabilidade em produção.
 
 ### 3.9 Aderência Regulatória
@@ -484,6 +490,7 @@ Necessário:
 - homologação de regras antes da ativação;
 - documentação formalizada da lógica financeira.
 
+> [!IMPORTANT] 
 >**Risco mitigado:** retrabalho, não conformidade e falhas em ambiente regulado.
 
 
@@ -491,7 +498,7 @@ Necessário:
 
 | Camada                 | Tecnologia              | Por quê                                                            |
 |------------------------|-------------------------|--------------------------------------------------------------------|
-| **Motor de simulação** | Go (ou Java 17+)        | Performance máxima, stateless, concorrência                        |
+| **Motor de simulação** | Go ou Java 17+        | Performance máxima, stateless, concorrência                        |
 | **API Gateway**        | API Gateway / Kong      | Segurança, throttling, Evita duplicar lógica nos canais (webapp)   |
 | **BFF**                | Node.js                 | Transformação rápida, leve                                         |
 | **ACL**                | Node.js ou Java         | Isolamento do legado                                               |
@@ -559,6 +566,7 @@ Necessário:
 - Quando o ecossistema é majoritariamente Java.
 - Quando a empresa exige padronização.
 
+> [!WARNING] 
 > A ACL NÃO deve ser escrita em linguagem pesada.  
 > Deve ser leve, simples e fácil de trocar.
 
@@ -594,7 +602,7 @@ Necessário:
 - Suporta cargas pesadas (dashboards e BI).
 
 > [!NOTE]  
-> **Amazon Redshift** é um serviço de data warehouse rápido e totalmente gerenciado na nuvem, que permite analisar grandes volumes de dados de forma eficiente e escalável.
+**Amazon Redshift** é um serviço de data warehouse rápido e totalmente gerenciado na nuvem, que permite analisar grandes volumes de dados de forma eficiente e escalável.
 
 ### 4.7 Banco transacional (Legado)
 Não alteramos no início. Apenas isolamos.
@@ -609,7 +617,8 @@ Não alteramos no início. Apenas isolamos.
 - Não é necessário escrever pipelines do zero.
 - Menor custo e monitoração nativa.
 
-> **AWS DMS** (Serviço de Migração de Banco de Dados da AWS) é um serviço gerenciado que facilita a migração de bancos de dados para a nuvem da AWS, permitindo migrações homogêneas (mesmo motor) e heterogêneas (motores diferentes) com tempo de inatividade mínimo.
+> [!NOTE] 
+**AWS DMS** (Serviço de Migração de Banco de Dados da AWS) é um serviço gerenciado que facilita a migração de bancos de dados para a nuvem da AWS, permitindo migrações homogêneas (mesmo motor) e heterogêneas (motores diferentes) com tempo de inatividade mínimo.
 
 ### 4.9 Observabilidade (Obrigatória na modernização)
 
@@ -668,13 +677,15 @@ Para calcular o *preco_base = prazo * taxa*
 Então, ao invés de calcular PRICE a cada solicitação.
 PMT = preco_base * valor_solicitado
 
->**PMT** é a Parcela de um financiamento calculada pelo sistema de amortização PRICE. 
+> [!NOTE] 
+**PMT** é a Parcela de um financiamento calculada pelo sistema de amortização PRICE. 
 É a parcela fixa que o cliente paga todo mês.
 
 ### 5.3 Escalabilidade
 **Cache agressivo para workloads repetitivas** 
 
->**Resultado:** menos CPU por requisição → mais escalabilidade com menos custo.
+> [!TIP]  
+**Resultado:** menos CPU por requisição → mais escalabilidade com menos custo.
 
 **Banco de dados protegido (Read-Replica + OLAP)**
 - Consultas somente na read-replica, nunca no master.
@@ -682,6 +693,7 @@ PMT = preco_base * valor_solicitado
 - Padrão CQRS: leitura em uma fonte, escrita em outra.
 - Queries pesadas rodando fora do legado.
 
+> [!TIP]  
 **Resultado:** a escalabilidade do serviço fica independente da capacidade do banco antigo.
 
 **Infraestrutura elástica (autoscaling)**
@@ -692,7 +704,8 @@ Escalabilidade baseada em um desses critérios de acordo com o comportamento de 
 - Tamanho da fila
 - Quantidade de conexões simultâneas
 
->**Resultado:** capacidade acompanha a demanda sem intervenção manual.
+> [!TIP]  
+**Resultado:** capacidade acompanha a demanda sem intervenção manual.
 
 ## 6. Resolução de para alto acoplamento
 Explicação e detalemnto realizado no tópico [2.5. Eventos para Desacoplar](#25-eventos-para-desacoplar)
@@ -736,6 +749,6 @@ Valor rápido:
 
 ## 8.  Desenho de solução
 
-![Desenho de solução](images/desenho_solucao.png)
+![Desenho de solução](images/arquitetura.png)
 
-[Arquivo para drawio](images/desenho_solucao.drawio)
+[Arquivo para drawio](images/arquitetura.drawio)

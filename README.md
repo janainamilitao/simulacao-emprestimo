@@ -63,6 +63,7 @@
     - [7.3 Cache e pré-cálculo](#73-cache-e-pré-cálculo)
     - [7.4 Observabilidade](#74-observabilidade)
     - [7.5 Lançamentos frequentes e pequenos](#75-lançamentos-frequentes-e-pequenos)
+  - [8.  Desenho de solução](#8--desenho-de-solução)
 
 
 <!-- TOC -->
@@ -864,3 +865,9 @@ Valor rápido:
 - Reduz risco de incidentes.
 
 - Permite aprender e ajustar rápido.
+
+## 8.  Desenho de solução
+
+![Desenho de solução](/desenho_solucao.png)
+
+[Link para drawio](/desenho_solucao.drawio)

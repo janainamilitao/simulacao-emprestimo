@@ -108,6 +108,12 @@ A funcionalidade **Simulação de Empréstimos** é crítica, hoje executa via *
 
 [Arquivo para drawio](images/arquitetura.drawio)
 
+> [!IMPORTANT]  
+A solução proposta nesse documento poderá ser alterada após a fase de discovery visto que algumas descobertas podem impactar a execução e ou uso de tecnologias.
+
+> [!IMPORTANT]  
+A estimativa de prazo seria dada após o refinamento das tarefas com o time técnico e alinhamento com todas as partes interessadas.
+
 ## 2. Estratégia de modernização
 
 ![Desenho modernização](images/modernizacao.png)

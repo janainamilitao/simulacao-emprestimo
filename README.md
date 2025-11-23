@@ -105,6 +105,8 @@ A funcionalidade **Simulação de Empréstimos** é crítica, hoje executa via *
 
 ## 1. Estratégia de modernização
 
+![Desenho modernização](images/modernizacao.png)
+
 ### 1.1 Realização de discovery da aplicação para mapear:
 - Dependência ocultas
 - Quais são os módulos mais críticos 

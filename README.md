@@ -116,7 +116,7 @@ A funcionalidade **Simulação de Empréstimos** é crítica, hoje executa via *
 - A ACL protege o novo sistema da "contaminação" do legado. Também permite substituir o legado aos poucos, sem paralisação.
 - Encapsula chamadas às stored procedures
 - Padroniza contratos de entrada/saída
-- Evita que regras ruins ou modelos anêmicos contaminem a nova arquitetura
+- Evita que regras ruins contaminem a nova arquitetura
 
 
 **O que colocar na ACL:**

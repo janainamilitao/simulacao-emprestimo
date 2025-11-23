@@ -718,8 +718,8 @@ Escalabilidade baseada em um desses critérios de acordo com o comportamento de 
 > [!TIP]  
 **Resultado:** capacidade acompanha a demanda sem intervenção manual.
 
-## 7. Resolução de para alto acoplamento
-Explicação e detalemnto realizado no tópico [3.5. Eventos para Desacoplar](#35-eventos-para-desacoplar)
+## 7. Resolução de alto acoplamento
+Explicação e detalhamento pode ser visto no tópico [3.5. Eventos para Desacoplar](#35-eventos-para-desacoplar)
 
 
 ## 8. Acelerar a entrega e gerar valor para o cliente

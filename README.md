@@ -419,6 +419,7 @@ A ACL deve:
 - Permitir que novos serviços não acessem diretamente o Sybase.
 - Uma ACL bem projetada permite substituição granular e segura.
 
+> [!IMPORTANT]  
 >**Risco mitigado:** recriação do acoplamento e impossibilidade de evolução futura.
 
 ### 3.3 Motor de Cálculo Independente e Precisão Financeira
@@ -592,6 +593,7 @@ Necessário:
 - Permite relatórios, projeções e histórico.
 - Suporta cargas pesadas (dashboards e BI).
 
+> [!NOTE]  
 > **Amazon Redshift** é um serviço de data warehouse rápido e totalmente gerenciado na nuvem, que permite analisar grandes volumes de dados de forma eficiente e escalável.
 
 ### 4.7 Banco transacional (Legado)

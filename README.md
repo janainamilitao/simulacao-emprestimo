@@ -868,6 +868,6 @@ Valor rápido:
 
 ## 8.  Desenho de solução
 
-![Desenho de solução](/desenho_solucao.png)
+![Desenho de solução](./desenho_solucao.png)
 
-[Link para drawio](/desenho_solucao.drawio)
+[Link para drawio](./desenho_solucao.drawio)

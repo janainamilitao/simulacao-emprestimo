@@ -114,7 +114,7 @@ A funcionalidade **Simulação de Empréstimos** é crítica, hoje executa via *
 ### 1.2 Encapsulamento do legado com uma camada anti-corrupção
 - Criação de uma camada que isole o core antigo, evitando que novos serviços falem direto com o banco e suas procedures.
 - A ACL protege o novo sistema da "contaminação" do legado. Também permite substituir o legado aos poucos, sem paralisação.
-- EncapsuLS chamadas às stored procedures
+- Encapsula chamadas às stored procedures
 - Padroniza contratos de entrada/saída
 - Evita que regras ruins ou modelos anêmicos contaminem a nova arquitetura
 

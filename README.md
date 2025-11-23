@@ -352,7 +352,7 @@ sequenceDiagram
 
     C->>API: Solicita simulação (valor, taxa, prazo)
     API->>ACL: Encaminha requisição normalizada
-    ACL->>RED: Consulta cache (hash dos parâmetros)
+    ACL->>RED: Consulta cache
     RED-->>ACL: Retorna resultado (Cache HIT)
     ACL-->>API: Retorna simulação
     API-->>C: Entrega resposta (ms)
@@ -389,7 +389,7 @@ sequenceDiagram
     RED-->>ACL: Miss (não encontrado)
 
     ACL->>SIM: Envia dados para cálculo PRICE + IOF
-    SIM->>SIM: Executa cálculo (<10ms)
+    SIM->>SIM: Executa cálculo
     SIM->>RED: Armazena resultado (TTL configurado)
     SIM->>EVT: Publica evento "SimulacaoCriada"
     
@@ -593,7 +593,7 @@ Necessário:
 | **Eventos**            | EventBridge ou Kafka    | Desacoplamento                                                     |
 | **Banco OLAP**         | Redshift / Athena       | Consultas pesadas sem Sybase                                       |
 | **ETL**                | Glue + DMS              | Pipelines prontos                                                  |
-| **Observabilidade**    |   Datagog               | Governança técnica                                                 |
+| **Observabilidade**    | Datadog                 | Governança técnica                                                 |
 | **Infra**              | Kubernetes ou ECS       | Escalável, resiliente                                              |
 
 

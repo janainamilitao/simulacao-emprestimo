@@ -7,64 +7,64 @@
   - [Perguntas](#perguntas)
   - [Informações Importantes](#informações-importantes)
 - [Solução](#solução)
-  - [1. Estratégia de modernização](#1-estratégia-de-modernização)
-    - [1.1 Realização de discovery da aplicação para mapear:](#11-realização-de-discovery-da-aplicação-para-mapear)
-    - [1.2 Encapsulamento do legado com uma camada anti-corrupção](#12-encapsulamento-do-legado-com-uma-camada-anti-corrupção)
-    - [1.3 Strangler Pattern](#13-strangler-pattern)
-    - [1.4 Usar a Clean Architecture](#14-usar-a-clean-architecture)
-    - [1.5 Uso de eventos para desacoplar e melhorar a performance](#15-uso-de-eventos-para-desacoplar-e-melhorar-a-performance)
-    - [1.6 Caching (Redis, ElastiCache)](#16-caching-redis-elasticache)
-    - [1.7 Otimização dos índices do banco](#17-otimização-dos-índices-do-banco)
-    - [1.8 Extrair a lógica de negócio da procedure monolítica para um serviço stateless (microservice/serviço modular) que exponha uma API de simulação.](#18-extrair-a-lógica-de-negócio-da-procedure-monolítica-para-um-serviço-stateless-microserviceserviço-modular-que-exponha-uma-api-de-simulação)
-    - [1.9 Feature toogle/ Rollout gradual](#19-feature-toogle-rollout-gradual)
-    - [1.10 Observalidade e monitoramento](#110-observalidade-e-monitoramento)
-  - [2. Solução de convivência](#2-solução-de-convivência)
-    - [2.1. Camada Anti-Corrupção (ACL)](#21-camada-anti-corrupção-acl)
-    - [2.2.  Uso do Strangler Pattern (migrar por partes)](#22--uso-do-strangler-pattern-migrar-por-partes)
-    - [2.3 Modo Sombra (Shadow Mode)](#23-modo-sombra-shadow-mode)
-    - [2.4 Feature Toggle (chaveamento dinâmico)](#24-feature-toggle-chaveamento-dinâmico)
-    - [2.5. Eventos para Desacoplar](#25-eventos-para-desacoplar)
-    - [2.6. Observabilidade da convivência](#26-observabilidade-da-convivência)
-    - [2.7 Fluxo durante a convivência](#27-fluxo-durante-a-convivência)
+  - [1. Desenho de solução](#1-desenho-de-solução)
+  - [2. Estratégia de modernização](#2-estratégia-de-modernização)
+    - [2.1 Realização de discovery da aplicação para mapear:](#21-realização-de-discovery-da-aplicação-para-mapear)
+    - [2.2 Encapsulamento do legado com uma camada anti-corrupção](#22-encapsulamento-do-legado-com-uma-camada-anti-corrupção)
+    - [2.3 Strangler Pattern](#23-strangler-pattern)
+    - [2.4 Usar a Clean Architecture](#24-usar-a-clean-architecture)
+    - [2.5 Uso de eventos para desacoplar e melhorar a performance](#25-uso-de-eventos-para-desacoplar-e-melhorar-a-performance)
+    - [2.6 Caching (Redis, ElastiCache)](#26-caching-redis-elasticache)
+    - [2.7 Otimização dos índices do banco](#27-otimização-dos-índices-do-banco)
+    - [2.8 Extrair a lógica de negócio da procedure monolítica para um serviço stateless (microservice/serviço modular) que exponha uma API de simulação.](#28-extrair-a-lógica-de-negócio-da-procedure-monolítica-para-um-serviço-stateless-microserviceserviço-modular-que-exponha-uma-api-de-simulação)
+    - [2.9 Feature toogle/ Rollout gradual](#29-feature-toogle-rollout-gradual)
+    - [2.10 Observalidade e monitoramento](#210-observalidade-e-monitoramento)
+  - [3. Solução de convivência](#3-solução-de-convivência)
+    - [3.1. Camada Anti-Corrupção (ACL)](#31-camada-anti-corrupção-acl)
+    - [3.2.  Uso do Strangler Pattern (migrar por partes)](#32--uso-do-strangler-pattern-migrar-por-partes)
+    - [3.3 Modo Sombra (Shadow Mode)](#33-modo-sombra-shadow-mode)
+    - [3.4 Feature Toggle (chaveamento dinâmico)](#34-feature-toggle-chaveamento-dinâmico)
+    - [3.5. Eventos para Desacoplar](#35-eventos-para-desacoplar)
+    - [3.6. Observabilidade da convivência](#36-observabilidade-da-convivência)
+    - [3.7 Fluxo durante a convivência](#37-fluxo-durante-a-convivência)
       - [Cenário 1: Cache HIT](#cenário-1-cache-hit)
       - [Cenário 2: Cache MISS → Novo motor calcula (PRICE + IOF)](#cenário-2-cache-miss--novo-motor-calcula-price--iof)
       - [Cenário 3: Precisa de dados do legado (dependências ainda não migradas)](#cenário-3-precisa-de-dados-do-legado-dependências-ainda-não-migradas)
-  - [3. Fatores críticos para o sucesso da modernização](#3-fatores-críticos-para-o-sucesso-da-modernização)
-    - [3.1 Entendimento Profundo do Legado](#31-entendimento-profundo-do-legado)
-    - [3.2 Uso Adequado da Camada ACL (Anti-Corruption Layer)](#32-uso-adequado-da-camada-acl-anti-corruption-layer)
-    - [3.3 Motor de Cálculo Independente e Precisão Financeira](#33-motor-de-cálculo-independente-e-precisão-financeira)
-    - [3.4 Estratégia de Migração Gradual (Strangler Pattern)](#34-estratégia-de-migração-gradual-strangler-pattern)
-    - [3.5 Observabilidade Completa](#35-observabilidade-completa)
-    - [3.6 Governança de Dados e ETL Confiável](#36-governança-de-dados-e-etl-confiável)
-    - [3.7 Testes Automatizados e Testes de Contrato](#37-testes-automatizados-e-testes-de-contrato)
-    - [3.8 Feature Toggles e Rollout Gradual](#38-feature-toggles-e-rollout-gradual)
-    - [3.9 Aderência Regulatória](#39-aderência-regulatória)
-  - [4. Linguagens e tecnologias adotadas](#4-linguagens-e-tecnologias-adotadas)
-    - [4.1. Linguagem do novo motor de cálculo (PRICE/IOF): Go ou Java](#41-linguagem-do-novo-motor-de-cálculo-priceiof-go-ou-java)
+  - [4. Fatores críticos para o sucesso da modernização](#4-fatores-críticos-para-o-sucesso-da-modernização)
+    - [4.1 Entendimento Profundo do Legado](#41-entendimento-profundo-do-legado)
+    - [4.2 Uso Adequado da Camada ACL (Anti-Corruption Layer)](#42-uso-adequado-da-camada-acl-anti-corruption-layer)
+    - [4.3 Motor de Cálculo Independente e Precisão Financeira](#43-motor-de-cálculo-independente-e-precisão-financeira)
+    - [4.4 Estratégia de Migração Gradual (Strangler Pattern)](#44-estratégia-de-migração-gradual-strangler-pattern)
+    - [4.5 Observabilidade Completa](#45-observabilidade-completa)
+    - [4.6 Governança de Dados e ETL Confiável](#46-governança-de-dados-e-etl-confiável)
+    - [4.7 Testes Automatizados e Testes de Contrato](#47-testes-automatizados-e-testes-de-contrato)
+    - [4.8 Feature Toggles e Rollout Gradual](#48-feature-toggles-e-rollout-gradual)
+    - [4.9 Aderência Regulatória](#49-aderência-regulatória)
+  - [5. Linguagens e tecnologias adotadas](#5-linguagens-e-tecnologias-adotadas)
+    - [5.1. Linguagem do novo motor de cálculo (PRICE/IOF): Go ou Java](#51-linguagem-do-novo-motor-de-cálculo-priceiof-go-ou-java)
       - [Opção 1 — **Go (Golang)**](#opção-1--go-golang)
       - [Opção 2 — **Java (17+)**](#opção-2--java-17)
-    - [4.2. API Gateway / BFF](#42-api-gateway--bff)
-    - [4.3 Camada ACL (Anti-Corruption Layer)](#43-camada-acl-anti-corruption-layer)
+    - [5.2. API Gateway / BFF](#52-api-gateway--bff)
+    - [5.3 Camada ACL (Anti-Corruption Layer)](#53-camada-acl-anti-corruption-layer)
       - [Node.js](#nodejs)
       - [Java](#java)
-    - [4.4 Cache — Redis / ElastiCache](#44-cache--redis--elasticache)
-    - [4.5 Mensageria / Eventos](#45-mensageria--eventos)
-    - [4.6 Banco analítico (OLAP)](#46-banco-analítico-olap)
-    - [4.7 Banco transacional (Legado)](#47-banco-transacional-legado)
-    - [4.8 ETL / Ingestão / Replicação](#48-etl--ingestão--replicação)
-    - [4.9 Observabilidade (Obrigatória na modernização)](#49-observabilidade-obrigatória-na-modernização)
-  - [5. Otimização, Performance e escalabilidade](#5-otimização-performance-e-escalabilidade)
-    - [5.1. Cache do resultado completo da simulação](#51-cache-do-resultado-completo-da-simulação)
-    - [5.2 Cache de pré-cálculo](#52-cache-de-pré-cálculo)
-    - [5.3 Escalabilidade](#53-escalabilidade)
-  - [6. Resolução de para alto acoplamento](#6-resolução-de-para-alto-acoplamento)
-  - [7. Acelerar a entrega e gerar valor para o cliente](#7-acelerar-a-entrega-e-gerar-valor-para-o-cliente)
-    - [7.1 Atacar o maior gargalo primeiro: simulação PRICE/IOF](#71-atacar-o-maior-gargalo-primeiro-simulação-priceiof)
-    - [7.2 Colocar a ACL na frente — antes de modernizar o legado](#72-colocar-a-acl-na-frente--antes-de-modernizar-o-legado)
-    - [7.3 Cache e pré-cálculo](#73-cache-e-pré-cálculo)
-    - [7.4 Observabilidade](#74-observabilidade)
-    - [7.5 Lançamentos frequentes e pequenos](#75-lançamentos-frequentes-e-pequenos)
-  - [8.  Desenho de solução](#8--desenho-de-solução)
+    - [5.4 Cache — Redis / ElastiCache](#54-cache--redis--elasticache)
+    - [5.5 Mensageria / Eventos](#55-mensageria--eventos)
+    - [5.6 Banco analítico (OLAP)](#56-banco-analítico-olap)
+    - [5.7 Banco transacional (Legado)](#57-banco-transacional-legado)
+    - [5.8 ETL / Ingestão / Replicação](#58-etl--ingestão--replicação)
+    - [5.9 Observabilidade (Obrigatória na modernização)](#59-observabilidade-obrigatória-na-modernização)
+  - [6. Otimização, Performance e escalabilidade](#6-otimização-performance-e-escalabilidade)
+    - [6.1. Cache do resultado completo da simulação](#61-cache-do-resultado-completo-da-simulação)
+    - [6.2 Cache de pré-cálculo](#62-cache-de-pré-cálculo)
+    - [6.3 Escalabilidade](#63-escalabilidade)
+  - [7. Resolução de para alto acoplamento](#7-resolução-de-para-alto-acoplamento)
+  - [8. Acelerar a entrega e gerar valor para o cliente](#8-acelerar-a-entrega-e-gerar-valor-para-o-cliente)
+    - [8.1 Atacar o maior gargalo primeiro: simulação PRICE/IOF](#81-atacar-o-maior-gargalo-primeiro-simulação-priceiof)
+    - [8.2 Colocar a ACL na frente — antes de modernizar o legado](#82-colocar-a-acl-na-frente--antes-de-modernizar-o-legado)
+    - [8.3 Cache e pré-cálculo](#83-cache-e-pré-cálculo)
+    - [8.4 Observabilidade](#84-observabilidade)
+    - [8.5 Lançamentos frequentes e pequenos](#85-lançamentos-frequentes-e-pequenos)
 
 
 <!-- TOC -->
@@ -84,7 +84,6 @@ A funcionalidade **Simulação de Empréstimos** é crítica, hoje executa via *
 
 **Desafio**: Propor uma solução para modernizar a funcionalidade de Simulação de Empréstimos, aplicando boas práticas de engenharia de software para atender às necessidades do negócio.
 
-
 ## Perguntas
 1. Qual estratégia você adotaria para modernizar essa funcionalidade?
 2. Como será a convivência da solução modernizada com o legado? (Visão técnica)
@@ -103,18 +102,24 @@ A funcionalidade **Simulação de Empréstimos** é crítica, hoje executa via *
 
 # Solução
 
-## 1. Estratégia de modernização
+## 1. Desenho de solução
+
+![Desenho de solução](images/arquitetura.png)
+
+[Arquivo para drawio](images/arquitetura.drawio)
+
+## 2. Estratégia de modernização
 
 ![Desenho modernização](images/modernizacao.png)
 
-### 1.1 Realização de discovery da aplicação para mapear:
+### 2.1 Realização de discovery da aplicação para mapear:
 - Dependência ocultas
 - Quais são os módulos mais críticos 
 - Quais procedure custam mais 
 - Mapa de dependências das funcionalidades
 - Entendimento do fluxo de negócio
 
-### 1.2 Encapsulamento do legado com uma camada anti-corrupção
+### 2.2 Encapsulamento do legado com uma camada anti-corrupção
 - Criação de uma camada que isole o core antigo, evitando que novos serviços falem direto com o banco e suas procedures.
 - A ACL permite substituir o legado aos poucos, sem paralisação.
 - Encapsula chamadas às stored procedures
@@ -129,7 +134,7 @@ A funcionalidade **Simulação de Empréstimos** é crítica, hoje executa via *
 
 Sem ACL você cria dívida técnica já no início do projeto.
 
-### 1.3 Strangler Pattern
+### 2.3 Strangler Pattern
 - Migrar por partes, sem reescrever tudo de uma vez.
 
 **Como funciona:**
@@ -145,11 +150,11 @@ Sem ACL você cria dívida técnica já no início do projeto.
 - Permite validação contínua em produção
 - Evita o retrabalho de adequações de funcionalidades do sistema legado
   
-### 1.4 Usar a Clean Architecture 
+### 2.4 Usar a Clean Architecture 
 - Para separar os dominios: negócio, banco de dados, validação, etc
 - Migrar regras para o serviço e deixar o DB apenas com responsabilidade de dados.
   
-### 1.5 Uso de eventos para desacoplar e melhorar a performance
+### 2.5 Uso de eventos para desacoplar e melhorar a performance
 ```
 Exemplo:
 Em vez de o módulo A chamar diretamente o módulo B, ele publica um evento: "PropostaCriada".
@@ -158,7 +163,7 @@ B consome esse evento quando puder.
 Isso diminui dependências e gargalos.
 ```
 
-### 1.6 Caching (Redis, ElastiCache)
+### 2.6 Caching (Redis, ElastiCache)
 Boa parte da lentidão dos sistemas legados vem da repetição de cálculos pesados, como:
 - Regras e validações de crédito
 - Consultas recorrentes ao banco de dados
@@ -168,16 +173,16 @@ Melhorias possíveis:
 - Tabelas de amortização pré-computadas (por taxas comuns/prazos frequentes) atualizadas em job noturno/por evento.
 
 
-### 1.7 Otimização dos índices do banco                  
-### 1.8 Extrair a lógica de negócio da procedure monolítica para um serviço stateless (microservice/serviço modular) que exponha uma API de simulação.
-### 1.9 Feature toogle/ Rollout gradual
-### 1.10 Observalidade e monitoramento 
+### 2.7 Otimização dos índices do banco                  
+### 2.8 Extrair a lógica de negócio da procedure monolítica para um serviço stateless (microservice/serviço modular) que exponha uma API de simulação.
+### 2.9 Feature toogle/ Rollout gradual
+### 2.10 Observalidade e monitoramento 
 
 
-## 2. Solução de convivência
+## 3. Solução de convivência
 A convivência entre solução modernizada e legado é um dos pontos mais críticos do projeto — e é exatamente onde entram a ACL (Anti-Corruption Layer), o Strangler Pattern, caches, eventos e a estratégia de migração gradual.
 
-### 2.1. Camada Anti-Corrupção (ACL)
+### 3.1. Camada Anti-Corrupção (ACL)
 A ACL funciona como:
 - orquestrador
 - proxy
@@ -196,7 +201,7 @@ A ACL funciona como:
 - migração é gradual, segura e reversível
 - coexistência é tangível  
 
-### 2.2.  Uso do Strangler Pattern (migrar por partes)
+### 3.2.  Uso do Strangler Pattern (migrar por partes)
 O fluxo é assim:
 - O legado continua respondendo tudo.
 - Você cria o novo motor de simulação.
@@ -208,7 +213,7 @@ A ACL decide se usa:
 
 Quando o novo motor é validado, o legado é desligado para aquela funcionalidade.
 
-### 2.3 Modo Sombra (Shadow Mode)
+### 3.3 Modo Sombra (Shadow Mode)
 Como funciona:
 - Usuário chama o endpoint ``/simular``.
 - A ACL manda o pedido para: legado e novo serviço
@@ -217,7 +222,7 @@ Como funciona:
 - Um job compara os dois resultados.
 - Quando houver confiança, você troca: resposta principal = novo serviço e o legado vira fallback.
 
-### 2.4 Feature Toggle (chaveamento dinâmico)
+### 3.4 Feature Toggle (chaveamento dinâmico)
 A ACL pode ter flags:
 - useLegacy = true
 - useNewEngine = false
@@ -225,7 +230,7 @@ A ACL pode ter flags:
 
 Com isso amigração é segura, o rollback é instantâneo e sem impactos ao negócio.
 
-### 2.5. Eventos para Desacoplar
+### 3.5. Eventos para Desacoplar
 Eventos são um dos pilares para reduzir acoplamento entre sistemas, principalmente quando você está modernizando um legado grande, cheio de chamadas diretas, procedures e dependências ocultas.
 
 **O problema atual (legado)**
@@ -269,7 +274,7 @@ Depois (com eventos):
 
 Falhas intermediárias não travam a simulação inteira, apenas algumas informações podem não estar dispoíveis.
 
-### 2.6. Observabilidade da convivência
+### 3.6. Observabilidade da convivência
 Com a modernização parcial, podemos ativar:
 - logs de latência (novo vs legado)
 - logs de divergência de cálculo (PRICE/IOF)
@@ -279,7 +284,7 @@ Com a modernização parcial, podemos ativar:
 - latência média
 - chamadas por canal
 
-### 2.7 Fluxo durante a convivência
+### 3.7 Fluxo durante a convivência
 - Fase 1 — tudo no legado
 - Fase 2 — shadow mode
 - Fase 3 — modo híbrido
@@ -399,9 +404,9 @@ sequenceDiagram
 7. ACL devolve para API Gateway.
 8. API Gateway entrega uma única resposta ao cliente.
 
-## 3. Fatores críticos para o sucesso da modernização
+## 4. Fatores críticos para o sucesso da modernização
 
-### 3.1 Entendimento Profundo do Legado
+### 4.1 Entendimento Profundo do Legado
 A base do sucesso depende da compreensão completa do comportamento atual:
 - Mapa de dependências das procedures Sybase;
 - Regras de negócio embutidas em triggers, views e código VB6/.NET;
@@ -412,7 +417,7 @@ A base do sucesso depende da compreensão completa do comportamento atual:
 > [!IMPORTANT] 
 >**Risco mitigado:** divergência funcional ou perda de regras ocultas.
 
-### 3.2 Uso Adequado da Camada ACL (Anti-Corruption Layer)
+### 4.2 Uso Adequado da Camada ACL (Anti-Corruption Layer)
 A ACL deve:
 - Proteger o novo sistema das inconsistências do legado;
 - Expor APIs limpas, idempotentes e independentes das procedures existentes;
@@ -423,7 +428,7 @@ A ACL deve:
 > [!IMPORTANT]  
 >**Risco mitigado:** recriação do acoplamento e impossibilidade de evolução futura.
 
-### 3.3 Motor de Cálculo Independente e Precisão Financeira
+### 4.3 Motor de Cálculo Independente e Precisão Financeira
 Um novo motor PRICE/IOF deve ser:
 - Consistente com o legado em 100% dos cenários conhecidos;
 - Validado com massa real (milhares de simulações);
@@ -431,7 +436,7 @@ Um novo motor PRICE/IOF deve ser:
 
 >**Risco mitigado:** divergências que causam rejeições, reclamações e risco regulatório.
 
-### 3.4 Estratégia de Migração Gradual (Strangler Pattern)
+### 4.4 Estratégia de Migração Gradual (Strangler Pattern)
 A modernização deve ocorrer por partes.
 
 Etapas:
@@ -443,7 +448,7 @@ Etapas:
 > [!IMPORTANT] 
 > **Risco mitigado:** big bang rewrite → a principal causa de falhas em modernização.
 
-### 3.5 Observabilidade Completa
+### 4.5 Observabilidade Completa
 Desde o primeiro dia, é indispensável:
 - Logs estruturados;
 - Tracing distribuído
@@ -454,7 +459,7 @@ Desde o primeiro dia, é indispensável:
 > [!IMPORTANT] 
 > **Risco mitigado:** problemas invisíveis, divergências silenciosas e indisponibilidade.
 
-### 3.6 Governança de Dados e ETL Confiável
+### 4.6 Governança de Dados e ETL Confiável
 A modernização envolve reavaliar:
 - Fonte de verdade dos dados de crédito;
 - Regras de sincronização entre Sybase e OLAP/read-replica;
@@ -463,7 +468,7 @@ A modernização envolve reavaliar:
 > [!IMPORTANT] 
 >**Risco mitigado:** dados duplicados ou inconsistências que geram erros financeiros.
 
-### 3.7 Testes Automatizados e Testes de Contrato
+### 4.7 Testes Automatizados e Testes de Contrato
 Devem ser implementados os seguintes tipos de testes:
 - Testes críticos para garantir compatibilidade:
 - Testes baseados em massa real de produção;
@@ -474,7 +479,7 @@ Devem ser implementados os seguintes tipos de testes:
 > [!IMPORTANT]
 >**Risco mitigado:** regressões e comportamentos inesperados.
 
-### 3.8 Feature Toggles e Rollout Gradual
+### 4.8 Feature Toggles e Rollout Gradual
 Permite:
 - ativação da nova simulação para grupos controlados;
 - comparações paralelas (shadow mode) sem impacto no cliente;
@@ -484,7 +489,7 @@ Permite:
 > [!IMPORTANT] 
 > **Risco mitigado:** instabilidade em produção.
 
-### 3.9 Aderência Regulatória
+### 4.9 Aderência Regulatória
 Necessário:
 - alinhamento contínuo com áreas de Crédito, Riscos e Compliance;
 - homologação de regras antes da ativação;
@@ -494,11 +499,11 @@ Necessário:
 >**Risco mitigado:** retrabalho, não conformidade e falhas em ambiente regulado.
 
 
-## 4. Linguagens e tecnologias adotadas
+## 5. Linguagens e tecnologias adotadas
 
 | Camada                 | Tecnologia              | Por quê                                                            |
 |------------------------|-------------------------|--------------------------------------------------------------------|
-| **Motor de simulação** | Go ou Java 17+        | Performance máxima, stateless, concorrência                        |
+| **Motor de simulação** | Go ou Java 17+          | Performance máxima, stateless, concorrência                        |
 | **API Gateway**        | API Gateway / Kong      | Segurança, throttling, Evita duplicar lógica nos canais (webapp)   |
 | **BFF**                | Node.js                 | Transformação rápida, leve                                         |
 | **ACL**                | Node.js ou Java         | Isolamento do legado                                               |
@@ -510,7 +515,7 @@ Necessário:
 | **Infra**              | Kubernetes ou ECS       | Escalável, resiliente                                              |
 
 
-### 4.1. Linguagem do novo motor de cálculo (PRICE/IOF): Go ou Java
+### 5.1. Linguagem do novo motor de cálculo (PRICE/IOF): Go ou Java
 
 #### Opção 1 — **Go (Golang)**
 
@@ -540,7 +545,7 @@ Necessário:
 - Quando a empresa já tem forte base Java.
 - Para serviços que exigem muita integração legada.
 
-### 4.2. API Gateway / BFF
+### 5.2. API Gateway / BFF
 
 **Opções comuns:**
 - Amazon API Gateway  
@@ -553,7 +558,7 @@ Necessário:
 - Monitoramento nativo  
 - Evita duplicar lógica nos canais (web/app)
 
-### 4.3 Camada ACL (Anti-Corruption Layer)
+### 5.3 Camada ACL (Anti-Corruption Layer)
 
 **Melhores tecnologias:** Node.js ou Java
 
@@ -570,7 +575,7 @@ Necessário:
 > A ACL NÃO deve ser escrita em linguagem pesada.  
 > Deve ser leve, simples e fácil de trocar.
 
-### 4.4 Cache — Redis / ElastiCache
+### 5.4 Cache — Redis / ElastiCache
 
 **Por que Redis?**
 - Aumenta a velocidade de disponibilidade dos dados
@@ -578,7 +583,7 @@ Necessário:
 - Suporte a TTL (Time To Live), evitando que um dado expirado continue sendo repassado do cache para o cliente, ao invés de consultar a base de dados para obter o valor mais recente.
 - Fundamental para eliminar chamadas repetidas do PRICE/IOF.
 
-### 4.5 Mensageria / Eventos
+### 5.5 Mensageria / Eventos
 
 **Melhores opções:**
 - AWS EventBridge (simples, escalável, nativo)
@@ -590,7 +595,7 @@ Necessário:
 - Evita travar aplicações no Sybase.
 - Viabiliza *Strangler Pattern* (migração por eventos).
 
-### 4.6 Banco analítico (OLAP)
+### 5.6 Banco analítico (OLAP)
 
 **Recomendados:**
 - Amazon Redshift*
@@ -604,10 +609,10 @@ Necessário:
 > [!NOTE]  
 **Amazon Redshift** é um serviço de data warehouse rápido e totalmente gerenciado na nuvem, que permite analisar grandes volumes de dados de forma eficiente e escalável.
 
-### 4.7 Banco transacional (Legado)
+### 5.7 Banco transacional (Legado)
 Não alteramos no início. Apenas isolamos.
 
-### 4.8 ETL / Ingestão / Replicação
+### 5.8 ETL / Ingestão / Replicação
 
 **Melhores ferramentas:**
 - AWS Glue para pipelines ETL → OLAP
@@ -620,7 +625,7 @@ Não alteramos no início. Apenas isolamos.
 > [!NOTE] 
 **AWS DMS** (Serviço de Migração de Banco de Dados da AWS) é um serviço gerenciado que facilita a migração de bancos de dados para a nuvem da AWS, permitindo migrações homogêneas (mesmo motor) e heterogêneas (motores diferentes) com tempo de inatividade mínimo.
 
-### 4.9 Observabilidade (Obrigatória na modernização)
+### 5.9 Observabilidade (Obrigatória na modernização)
 
 **Stack que pode ser usada:**
 - Datadog para Dashboard e alertas
@@ -636,10 +641,10 @@ Não alteramos no início. Apenas isolamos.
 - Detectar regressões rapidamente.
 - Focar a modernização com base em dados reais.
 
-## 5. Otimização, Performance e escalabilidade
+## 6. Otimização, Performance e escalabilidade
 Para remover o gargalo do cálculo PRICE + IOF usando Redis, podemos  usar o cache como acelerador de cálculos repetitivos.
 
-### 5.1. Cache do resultado completo da simulação
+### 6.1. Cache do resultado completo da simulação
 **Exemplo**:
 
 ```
@@ -654,7 +659,7 @@ data1Venc = 2026-01-10
 Se outro cliente pedir a mesma simulação, o fluxo será:
 Redis → devolve simulação → sem cálculos
 
-### 5.2 Cache de pré-cálculo
+### 6.2 Cache de pré-cálculo
 O cálculo da parcela PRICE depende de:
 - valor
 - taxa
@@ -681,7 +686,7 @@ PMT = preco_base * valor_solicitado
 **PMT** é a Parcela de um financiamento calculada pelo sistema de amortização PRICE. 
 É a parcela fixa que o cliente paga todo mês.
 
-### 5.3 Escalabilidade
+### 6.3 Escalabilidade
 **Cache agressivo para workloads repetitivas** 
 
 > [!TIP]  
@@ -707,13 +712,13 @@ Escalabilidade baseada em um desses critérios de acordo com o comportamento de 
 > [!TIP]  
 **Resultado:** capacidade acompanha a demanda sem intervenção manual.
 
-## 6. Resolução de para alto acoplamento
-Explicação e detalemnto realizado no tópico [2.5. Eventos para Desacoplar](#25-eventos-para-desacoplar)
+## 7. Resolução de para alto acoplamento
+Explicação e detalemnto realizado no tópico [3.5. Eventos para Desacoplar](#35-eventos-para-desacoplar)
 
 
-## 7. Acelerar a entrega e gerar valor para o cliente
+## 8. Acelerar a entrega e gerar valor para o cliente
 
-### 7.1 Atacar o maior gargalo primeiro: simulação PRICE/IOF
+### 8.1 Atacar o maior gargalo primeiro: simulação PRICE/IOF
 - Criar o serviço de simulação stateless.
 - Derrubar o uso das procedures pesadas.
 - Implementar cache Redis.
@@ -722,7 +727,7 @@ Valor entregue rapidamente:
 - Reduzir latência.
 - Reduzir consumo do Sybase imediatamente.
 
-### 7.2 Colocar a ACL na frente — antes de modernizar o legado
+### 8.2 Colocar a ACL na frente — antes de modernizar o legado
 - Com a ACL, todo novo serviço usa um contrato limpo.
 - O legado fica atrás da “parede antipoluição”.
 - Você pode substituir módulos do legado sem quebrar os canais.
@@ -732,23 +737,17 @@ Valor rápido:
 - Reduz risco de “gambiarra” e acoplamento novo no legado.
 - Permite modernização modular.
 
-### 7.3 Cache e pré-cálculo
+### 8.3 Cache e pré-cálculo
 - Requisições retormam mais rápido
 - Redução drástica no custo de CPU.
 - Remove gargalo do Sybase sem mexer no código do legado.
   
-### 7.4 Observabilidade
+### 8.4 Observabilidade
 - Permite decisões baseadas em dados.
 - Evita “otimizar o que não dói”.
 - Ajuda a priorizar próximas modernizações.
 
-### 7.5 Lançamentos frequentes e pequenos
+### 8.5 Lançamentos frequentes e pequenos
 - Cliente recebe melhorias contínuas.
 - Reduz risco de incidentes.
 - Permite aprender e ajustar rápido.
-
-## 8.  Desenho de solução
-
-![Desenho de solução](images/arquitetura.png)
-
-[Arquivo para drawio](images/arquitetura.drawio)

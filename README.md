@@ -28,7 +28,7 @@
     - [2.7 Fluxo durante a convivência](#27-fluxo-durante-a-convivência)
       - [Cenário 1: Cache HIT](#cenário-1-cache-hit)
       - [Cenário 2: Cache MISS → Novo motor calcula (PRICE + IOF)](#cenário-2-cache-miss--novo-motor-calcula-price--iof)
-      - [Cenário 2: Precisa de dados do legado (dependências ainda não migradas)](#cenário-2-precisa-de-dados-do-legado-dependências-ainda-não-migradas)
+      - [Cenário 3: Precisa de dados do legado (dependências ainda não migradas)](#cenário-3-precisa-de-dados-do-legado-dependências-ainda-não-migradas)
   - [3. Fatores críticos para o sucesso da modernização](#3-fatores-críticos-para-o-sucesso-da-modernização)
     - [3.1 Entendimento Profundo do Legado](#31-entendimento-profundo-do-legado)
     - [3.2 Uso Adequado da Camada ACL (Anti-Corruption Layer)](#32-uso-adequado-da-camada-acl-anti-corruption-layer)
@@ -872,6 +872,6 @@ Valor rápido:
 
 ## 8.  Desenho de solução
 
-![Desenho de solução](./desenho_solucao.png)
+![Desenho de solução](images/desenho_solucao.png)
 
-[Link para drawio](./desenho_solucao.drawio)
+[Arquivo para drawio](images/desenho_solucao.drawio)

@@ -409,9 +409,9 @@ sequenceDiagram
 7. Motor publica evento (para auditoria, ETL, analytics...).
 8. Motor devolve o resultado à ACL.
 9. ACL → API → Cliente.
-10. Resposta rápida mesmo com cálculo, sem tocar nas procedures lentas do Sybase.
+10. Resposta rápida mesmo com cálculo, sem mexer nas procedures lentas do Sybase.
 
-#### Cenário 2: Precisa de dados do legado (dependências ainda não migradas)
+#### Cenário 3: Precisa de dados do legado (dependências ainda não migradas)
 
 Usado quando regras antigas ainda dependem do Sybase.
 

@@ -724,10 +724,14 @@ Não alteramos no início. Apenas isolamos.
 
 ### 4.9 Observabilidade (Obrigatória na modernização)
 
-**Stack recomendada:**
-- Datagog para Dashboard e alertas
-- Logs: CloudWatch, ELK ou Datadog
+**Stack que pode ser usada:**
+- Datadog para Dashboard e alertas
+- Logs: CloudWatch e Datadog
 - Tracing distribuído
+
+-Outras Opções:
+- Prometheus e Grafafa para monitoramento e Dashboard
+- Splunk para gestão de logs
 
 **Por que?**
 - Transparência total durante convivência com o legado.

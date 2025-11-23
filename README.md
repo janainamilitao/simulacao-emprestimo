@@ -20,35 +20,38 @@
     - [1.10 Observalidade e monitoramento](#110-observalidade-e-monitoramento)
   - [2. Solução de convivência](#2-solução-de-convivência)
     - [2.1. Camada Anti-Corrupção (ACL)](#21-camada-anti-corrupção-acl)
-  - [2.2.  Uso do Strangler Pattern (migrar por partes)](#22--uso-do-strangler-pattern-migrar-por-partes)
-  - [2.3 Modo Sombra (Shadow Mode)](#23-modo-sombra-shadow-mode)
+    - [2.2.  Uso do Strangler Pattern (migrar por partes)](#22--uso-do-strangler-pattern-migrar-por-partes)
+    - [2.3 Modo Sombra (Shadow Mode)](#23-modo-sombra-shadow-mode)
     - [2.4 Feature Toggle (chaveamento dinâmico)](#24-feature-toggle-chaveamento-dinâmico)
     - [2.5. Eventos para Desacoplar](#25-eventos-para-desacoplar)
-  - [2.6. Observabilidade da convivência](#26-observabilidade-da-convivência)
-    - [Cenário 1: Cache HIT](#cenário-1-cache-hit)
-    - [Cenário 2: Cache MISS → Novo motor calcula (PRICE + IOF)](#cenário-2-cache-miss--novo-motor-calcula-price--iof)
-    - [Cenário 2: Precisa de dados do legado (dependências ainda não migradas)](#cenário-2-precisa-de-dados-do-legado-dependências-ainda-não-migradas)
+    - [2.6. Observabilidade da convivência](#26-observabilidade-da-convivência)
+    - [2.7 Fluxo durante a convivência](#27-fluxo-durante-a-convivência)
+      - [Cenário 1: Cache HIT](#cenário-1-cache-hit)
+      - [Cenário 2: Cache MISS → Novo motor calcula (PRICE + IOF)](#cenário-2-cache-miss--novo-motor-calcula-price--iof)
+      - [Cenário 2: Precisa de dados do legado (dependências ainda não migradas)](#cenário-2-precisa-de-dados-do-legado-dependências-ainda-não-migradas)
   - [3. Fatores críticos para o sucesso da modernização](#3-fatores-críticos-para-o-sucesso-da-modernização)
     - [3.1 Entendimento Profundo do Legado](#31-entendimento-profundo-do-legado)
     - [3.2 Uso Adequado da Camada ACL (Anti-Corruption Layer)](#32-uso-adequado-da-camada-acl-anti-corruption-layer)
     - [3.3 Motor de Cálculo Independente e Precisão Financeira](#33-motor-de-cálculo-independente-e-precisão-financeira)
     - [3.4 Estratégia de Migração Gradual (Strangler Pattern)](#34-estratégia-de-migração-gradual-strangler-pattern)
     - [3.6 Governança de Dados e ETL Confiável](#36-governança-de-dados-e-etl-confiável)
-  - [3.7 Testes Automatizados e Testes de Contrato](#37-testes-automatizados-e-testes-de-contrato)
+    - [3.7 Testes Automatizados e Testes de Contrato](#37-testes-automatizados-e-testes-de-contrato)
+    - [3.8 Feature Toggles e Rollout Gradual](#38-feature-toggles-e-rollout-gradual)
+    - [3.9 Aderência Regulatória](#39-aderência-regulatória)
   - [4. Linguagens e tecnologias adotadas](#4-linguagens-e-tecnologias-adotadas)
     - [4.1. Linguagem do novo motor de cálculo (PRICE/IOF): Go ou Java](#41-linguagem-do-novo-motor-de-cálculo-priceiof-go-ou-java)
-    - [Opção 1 — **Go (Golang)**](#opção-1--go-golang)
-    - [Opção 2 — **Java (17+)**](#opção-2--java-17)
-  - [4.2. API Gateway / BFF](#42-api-gateway--bff)
-  - [3. Camada ACL (Anti-Corruption Layer)](#3-camada-acl-anti-corruption-layer)
-    - [Node.js](#nodejs)
-    - [Java](#java)
-  - [4. Cache — Redis / ElastiCache](#4-cache--redis--elasticache)
-  - [5. Mensageria / Eventos](#5-mensageria--eventos)
-  - [6. Banco analítico (OLAP)](#6-banco-analítico-olap)
-  - [7. Banco transacional (Legado)](#7-banco-transacional-legado)
-  - [8. ETL / Ingestão / Replicação](#8-etl--ingestão--replicação)
-  - [9. Observabilidade (Obrigatória na modernização)](#9-observabilidade-obrigatória-na-modernização)
+      - [Opção 1 — **Go (Golang)**](#opção-1--go-golang)
+      - [Opção 2 — **Java (17+)**](#opção-2--java-17)
+    - [4.2. API Gateway / BFF](#42-api-gateway--bff)
+    - [4.3 Camada ACL (Anti-Corruption Layer)](#43-camada-acl-anti-corruption-layer)
+      - [Node.js](#nodejs)
+      - [Java](#java)
+    - [4.4 Cache — Redis / ElastiCache](#44-cache--redis--elasticache)
+    - [4.5 Mensageria / Eventos](#45-mensageria--eventos)
+    - [4.6 Banco analítico (OLAP)](#46-banco-analítico-olap)
+    - [4.7 Banco transacional (Legado)](#47-banco-transacional-legado)
+    - [4.8 ETL / Ingestão / Replicação](#48-etl--ingestão--replicação)
+    - [4.9 Observabilidade (Obrigatória na modernização)](#49-observabilidade-obrigatória-na-modernização)
   - [5. Otimização, Performance e escalabilidade](#5-otimização-performance-e-escalabilidade)
     - [5.1. Cache do resultado completo da simulação](#51-cache-do-resultado-completo-da-simulação)
     - [5.2 Cache de pré-cálculo](#52-cache-de-pré-cálculo)
@@ -218,7 +221,7 @@ A ACL funciona como:
 - coexistência é tranquila
   
 
-## 2.2.  Uso do Strangler Pattern (migrar por partes)
+### 2.2.  Uso do Strangler Pattern (migrar por partes)
 
 O fluxo é assim:
 
@@ -234,7 +237,7 @@ A ACL decide se usa:
 
 Quando o novo motor é validado → o legado é desligado para aquela operação.
 
-## 2.3 Modo Sombra (Shadow Mode)
+### 2.3 Modo Sombra (Shadow Mode)
 
 Como funciona:
 
@@ -315,7 +318,7 @@ Depois (com eventos)
 
 Nada disso trava a simulação.
 
-## 2.6. Observabilidade da convivência
+### 2.6. Observabilidade da convivência
 
 Com modernização parcial, podemos ativar:
 
@@ -327,14 +330,14 @@ Com modernização parcial, podemos ativar:
 - latência média
 - chamadas por canal
 
-**7. Fluxo durante a convivência**
+### 2.7 Fluxo durante a convivência
 - Fase 1 — tudo no legado
 - Fase 2 — shadow mode
 - Fase 3 — modo híbrido
 - Fase 4 — legado removido da rota
 
 
-### Cenário 1: Cache HIT
+#### Cenário 1: Cache HIT
 
 Usado quando a simulação já foi calculada recentemente.
 
@@ -367,7 +370,7 @@ sequenceDiagram
 6. API envia ao cliente — resposta em milissegundos, sem cálculo PRICE, nem IOF, nem Sybase.
 
 
-### Cenário 2: Cache MISS → Novo motor calcula (PRICE + IOF)
+#### Cenário 2: Cache MISS → Novo motor calcula (PRICE + IOF)
 Usado quando a simulação é nova.
 ```mermaid
 sequenceDiagram
@@ -407,7 +410,7 @@ sequenceDiagram
 9. ACL → API → Cliente.
 10. Resposta rápida mesmo com cálculo, sem tocar nas procedures lentas do Sybase.
 
-### Cenário 2: Precisa de dados do legado (dependências ainda não migradas)
+#### Cenário 2: Precisa de dados do legado (dependências ainda não migradas)
 
 Usado quando regras antigas ainda dependem do Sybase.
 
@@ -538,7 +541,7 @@ A modernização envolve reavaliar:
 
 **Risco mitigado:** dados duplicados ou inconsistências que geram erros financeiros.
 
-## 3.7 Testes Automatizados e Testes de Contrato
+### 3.7 Testes Automatizados e Testes de Contrato
 
 - Testes críticos para garantir compatibilidade:
 
@@ -552,7 +555,7 @@ A modernização envolve reavaliar:
 
 **Risco mitigado:** regressões e comportamentos inesperados.
 
-3.8 Feature Toggles e Rollout Gradual
+### 3.8 Feature Toggles e Rollout Gradual
 
 Permite:
 
@@ -566,7 +569,7 @@ Permite:
 
 **Risco mitigado:** instabilidade em produção.
 
-3.10 Aderência Regulatória
+### 3.9 Aderência Regulatória
 
 Necessário:
 
@@ -577,26 +580,26 @@ Necessário:
 - documentação formalizada da lógica financeira.
 
 > **Risco mitigado:** retrabalho, não conformidade e falhas em ambiente regulado.
->
+
 
 ## 4. Linguagens e tecnologias adotadas
-| Camada              | Tecnologia              | Por quê                                       |
-|---------------------|--------------------------|------------------------------------------------|
-| **Motor de simulação** | Go (ou Java 17+)        | Performance máxima, stateless, concorrência   |
-| **API Gateway**        | API Gateway / Kong      | Segurança, throttling, Evita duplicar lógica nos canais (webapp)|
-| **BFF**                | Node.js                 | Transformação rápida, leve                    |
-| **ACL**                | Node.js ou Java         | Isolamento do legado                          |
-| **Cache**              | Redis (ElastiCache)     | <1ms, elimina gargalos                        |
-| **Eventos**            | EventBridge ou Kafka    | Desacoplamento                                 |
-| **Banco OLAP**         | Redshift / Athena       | Consultas pesadas sem Sybase                  |
-| **ETL**                | Glue + DMS              | Pipelines prontos                             |
-| **Observabilidade**    | OTEL + Grafana          | Governança técnica                             |
-| **Infra**              | Kubernetes ou ECS       | Escalável, resiliente                         |
+| Camada                 | Tecnologia                 | Por quê                                                         |
+|------------------------|----------------------------|-----------------------------------------------------------------|
+| **Motor de simulação** | Go (ou Java 17+)        | Performance máxima, stateless, concorrência                        |
+| **API Gateway**        | API Gateway / Kong      | Segurança, throttling, Evita duplicar lógica nos canais (webapp)   |
+| **BFF**                | Node.js                 | Transformação rápida, leve                                         |
+| **ACL**                | Node.js ou Java         | Isolamento do legado                                               |
+| **Cache**              | Redis (ElastiCache)     | elimina gargalos                                                   |
+| **Eventos**            | EventBridge ou Kafka    | Desacoplamento                                                     |
+| **Banco OLAP**         | Redshift / Athena       | Consultas pesadas sem Sybase                                       |
+| **ETL**                | Glue + DMS              | Pipelines prontos                                                  |
+| **Observabilidade**    |   Datagog               | Governança técnica                                                 |
+| **Infra**              | Kubernetes ou ECS       | Escalável, resiliente                                              |
 
 
 ### 4.1. Linguagem do novo motor de cálculo (PRICE/IOF): Go ou Java
 
-### Opção 1 — **Go (Golang)**
+#### Opção 1 — **Go (Golang)**
 
 **Por que Go?**
 - Altíssima performance (ideal para cálculos financeiros).
@@ -614,7 +617,7 @@ Necessário:
 
 ---
 
-### Opção 2 — **Java (17+)**
+#### Opção 2 — **Java (17+)**
 
 **Por que Java?**
 - “Safe bet” em ambientes corporativos.
@@ -628,7 +631,7 @@ Necessário:
 
 ---
 
-## 4.2. API Gateway / BFF
+### 4.2. API Gateway / BFF
 
 **Opções comuns:**
 - Amazon API Gateway  
@@ -643,16 +646,16 @@ Necessário:
 
 ---
 
-## 3. Camada ACL (Anti-Corruption Layer)
+### 4.3 Camada ACL (Anti-Corruption Layer)
 
 **Melhores tecnologias:** Node.js ou Java
 
-### Node.js
+#### Node.js
 - Ótimo para orquestração e transformação rápida de payloads.
 - Excelente desempenho em I/O.
 - Menor custo operacional.
 
-### Java
+#### Java
 - Quando o ecossistema é majoritariamente Java.
 - Quando a empresa exige padronização.
 
@@ -661,16 +664,15 @@ Necessário:
 
 ---
 
-## 4. Cache — Redis / ElastiCache
+### 4.4 Cache — Redis / ElastiCache
 
 **Por que Redis?**
 - Velocidade absurda
 - Suporte a TTL.
 - Fundamental para eliminar chamadas repetidas do PRICE/IOF.
 
----
 
-## 5. Mensageria / Eventos
+### 4.5 Mensageria / Eventos
 
 **Melhores opções:**
 - AWS EventBridge (simples, escalável, nativo)
@@ -684,7 +686,7 @@ Necessário:
 
 ---
 
-## 6. Banco analítico (OLAP)
+### 4.6 Banco analítico (OLAP)
 
 **Recomendados:**
 - Amazon Redshift*
@@ -699,13 +701,13 @@ Necessário:
 
 ---
 
-## 7. Banco transacional (Legado)
+### 4.7 Banco transacional (Legado)
 
 Não alteramos no início. Apenas isolamos.
 
 ---
 
-## 8. ETL / Ingestão / Replicação
+### 4.8 ETL / Ingestão / Replicação
 
 **Melhores ferramentas:**
 - AWS Glue para pipelines ETL → OLAP
@@ -719,7 +721,7 @@ Não alteramos no início. Apenas isolamos.
 
 ---
 
-## 9. Observabilidade (Obrigatória na modernização)
+### 4.9 Observabilidade (Obrigatória na modernização)
 
 **Stack recomendada:**
 - Datagog para Dashboard e alertas
@@ -733,7 +735,6 @@ Não alteramos no início. Apenas isolamos.
   
 
 ## 5. Otimização, Performance e escalabilidade
-
 Para remover o gargalo do cálculo PRICE + IOF usando Redis, podemos  usar o cache como acelerador de cálculos repetitivos.
 
 ### 5.1. Cache do resultado completo da simulação
@@ -783,7 +784,7 @@ PMT = preco_base * valor_solicitado
 ### 5.3 Escalabilidade
 
 **Cache agressivo para workloads repetitivas** 
->📌**Resultado:** menos CPU por requisição → mais escalabilidade com menos custo.
+>**Resultado:** menos CPU por requisição → mais escalabilidade com menos custo.
 
 **Banco de dados protegido (Read-Replica + OLAP)**
 - Consultas somente na read-replica, nunca no master.
@@ -791,7 +792,7 @@ PMT = preco_base * valor_solicitado
 - Padrão CQRS: leitura em uma fonte, escrita em outra.
 - Queries pesadas rodando fora do legado.
 
->📌**Resultado:** a escalabilidade do serviço fica independente da capacidade do banco antigo.
+**Resultado:** a escalabilidade do serviço fica independente da capacidade do banco antigo.
 
 
 **Infraestrutura elástica (autoscaling)**
@@ -807,7 +808,7 @@ Escalabilidade baseada em:
 
 - Quantidade de conexões simultâneas
 
->📌 Resultado: capacidade acompanha demanda sem intervenção manual.
+>**Resultado:** capacidade acompanha demanda sem intervenção manual.
 
 
 ## 6. Resolução de para alto acoplamento
